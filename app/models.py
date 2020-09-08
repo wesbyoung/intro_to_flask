@@ -3,6 +3,18 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    body = db.Column(db.Text)
+    created_on = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_on = db.Column(db.DateTime)
+    user_id = db.Column(db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f"<Post: {self.body[:20]}..."
+
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String)
@@ -10,6 +22,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String, unique=True)
     password = db.Column(db.String)
     created_on = db.Column(db.DateTime, default=datetime.utcnow)
+    posts = db.relationship('Post', backref='user', lazy=True)
 
     def hash_password(self, original_password):
         self.password = generate_password_hash(original_password)

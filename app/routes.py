@@ -1,16 +1,23 @@
 from .import app, db
 from flask import render_template, request, redirect, url_for, flash
-from app.models import User
+from app.models import User, Post
 from flask_login import login_user, logout_user, current_user
 
 @app.route('/')
 def index():
-    print("Current User:", current_user)
-    print("Active User:", current_user.is_active)
-    print("Anonymous User:", current_user.is_anonymous)
-    print("Authenticated User:", current_user.is_authenticated)
-    print("ID of User:", current_user.get_id())
-    return render_template('index.html')
+    # print("Current User:", current_user)
+    # print("Active User:", current_user.is_active)
+    # print("Anonymous User:", current_user.is_anonymous)
+    # print("Authenticated User:", current_user.is_authenticated)
+    # print("ID of User:", current_user.get_id())
+    if current_user.is_authenticated:
+        posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.created_on.desc()).all()
+    else: 
+        posts = []
+    context = {
+        'posts': posts
+    }
+    return render_template('index.html', **context)
 
 @app.route('/about')
 def about():
@@ -60,3 +67,17 @@ def profile():
         
     }
     return render_template('profile.html', **context)
+
+@app.route('/create-post', methods=['POST'])
+def create_post():
+    if request.method == 'POST':
+        r = request.form
+        data = {
+            'post_body': r.get('post-body'),
+            'author_id': current_user.id,
+        }
+        p = Post(body=data['post_body'], user_id=data['author_id'])
+        db.session.add(p)
+        db.session.commit()
+        flash("The post was created successfully", 'success')
+    return redirect(url_for('index'))
