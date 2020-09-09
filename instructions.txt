@@ -1,0 +1,8 @@
+1. Create new route called users
+2. Inject your list of users into the template/route
+3. In the template, list all of your users
+4. If the current logged-in user is already following a user, show the unfollow button
+5. If the current logged-in user is not following a user, show the follow button
+6. Protect the route so that you must in first to view the page
+7. Make a navigation link for the route
+8. Use jinja conditional templating to only show the navigation link if the user is logged in

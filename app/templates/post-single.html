@@ -1,6 +1,10 @@
 {% extends 'layout.html' %}
 {% set active_page='index' -%}
 
+{% block title %}
+    {{ super() }} | Post
+{% endblock %}
+
 {% block body %}
     <h3>Single Post Page</h3>
     <hr>

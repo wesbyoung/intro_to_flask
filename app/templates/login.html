@@ -1,6 +1,10 @@
 {% extends 'layout.html' %}
 {% set active_page='login' -%}
 
+{% block title %}
+    {{ super() }} | Login
+{% endblock %}
+
 {% block body %}
     <h3>Login Page</h3>
     <hr>

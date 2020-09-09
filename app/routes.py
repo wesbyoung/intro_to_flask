@@ -1,5 +1,5 @@
-from .import app, db
-from flask import render_template, request, redirect, url_for, flash
+from .import db
+from flask import current_app as app, render_template, request, redirect, url_for, flash
 from app.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
@@ -92,34 +92,27 @@ def profile():
 
     context = {
         'user': user,
-        'posts': current_user.posts
+        'posts': current_user.posts,
+        'users': [user for user in User.query.all() if current_user != user]
     }
     return render_template('profile.html', **context)
 
-@app.route('/create-post', methods=['POST'])
-def create_post():
-    if request.method == 'POST':
-        r = request.form
-        data = {
-            'post_body': r.get('post-body'),
-            'author_id': current_user.id,
-        }
-        p = Post(body=data['post_body'], user_id=data['author_id'])
-        db.session.add(p)
-        db.session.commit()
-        flash("The post was created successfully", 'success')
-    return redirect(url_for('index'))
-
-# @app.route('/blog/<int:id>')
-# @login_required
-# def get_post(id):
-#     p = Post.query.get(id)
-#     return render_template('post-single.html', post=p)
-    
-@app.route('/blog')
+@app.route('/users/follow')
 @login_required
-def get_post():
+def follow():
     _id = request.args.get('id')
-    p = Post.query.get(_id)
-    return render_template('post-single.html', post=p)
+    user = User.query.get(_id)
+    current_user.follow(user)
+    db.session.commit()
+    flash(f'You are now following {user.first_name} {user.last_name}', 'success')
+    return redirect(url_for('profile'))
 
+@app.route('/users/unfollow')
+@login_required
+def unfollow():
+    _id = request.args.get('id')
+    user = User.query.get(_id)
+    current_user.unfollow(user)
+    db.session.commit()
+    flash(f'You have unfollowed {user.first_name} {user.last_name}', 'danger')
+    return redirect(url_for('profile'))
