@@ -1,5 +1,5 @@
 from .import db
-from flask import current_app as app, render_template, request, redirect, url_for, flash
+from flask import current_app as app, render_template, request, redirect, url_for, flash, session
 from app.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
@@ -51,7 +51,6 @@ def login():
             flash("You have used either an incorrect email or password", 'danger')
             return redirect(url_for('login'))
         login_user(user, remember=r.get('remember_me'))
-
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
@@ -60,6 +59,7 @@ def login():
     return render_template('login.html')
 
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     flash("You have successfully logged out", 'info')
@@ -105,7 +105,7 @@ def follow():
     current_user.follow(user)
     db.session.commit()
     flash(f'You are now following {user.first_name} {user.last_name}', 'success')
-    return redirect(url_for('profile'))
+    return redirect(url_for('users'))
 
 @app.route('/users/unfollow')
 @login_required
@@ -115,4 +115,9 @@ def unfollow():
     current_user.unfollow(user)
     db.session.commit()
     flash(f'You have unfollowed {user.first_name} {user.last_name}', 'danger')
-    return redirect(url_for('profile'))
+    return redirect(url_for('users'))
+
+@app.route('/users')
+@login_required
+def users():
+    return render_template('users.html', users=User.query.all())
