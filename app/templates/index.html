@@ -27,11 +27,11 @@
                         <li class="list-group-item">
                             <p>
                                 <h5>
-                                    <a href="#">{{ p.body }}</a>
+                                    <a href="{{ url_for('get_post', id=p.id) }}">{{ p.body }}</a>
                                 </h5>
                             </p>
                             <cite>
-                                &mdash; {{ "{} {}".format(current_user.first_name, current_user.last_name) }} @ {{ moment(p.created_on).fromNow() }}
+                                &mdash; {{ "{} {}".format(p.user.first_name, p.user.last_name) }} @ {{ moment(p.created_on).fromNow() }}
                             </cite>
                         </li>
                     {% endfor %}

@@ -1,9 +1,11 @@
 from .import app, db
 from flask import render_template, request, redirect, url_for, flash
 from app.models import User, Post
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
+from werkzeug.urls import url_parse
 
 @app.route('/')
+@login_required
 def index():
     # print("Current User:", current_user)
     # print("Active User:", current_user.is_active)
@@ -11,15 +13,13 @@ def index():
     # print("Authenticated User:", current_user.is_authenticated)
     # print("ID of User:", current_user.get_id())
     if current_user.is_authenticated:
-        posts = Post.query.filter_by(user_id=current_user.id).order_by(Post.created_on.desc()).all()
-    else: 
+        posts = current_user.followed_posts().all()
+    else:
         posts = []
-    context = {
-        'posts': posts
-    }
-    return render_template('index.html', **context)
+    return render_template('index.html', posts=posts)
 
 @app.route('/about')
+@login_required
 def about():
     return render_template('about.html')
 
@@ -51,8 +51,12 @@ def login():
             flash("You have used either an incorrect email or password", 'danger')
             return redirect(url_for('login'))
         login_user(user, remember=r.get('remember_me'))
+
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
         flash("You have logged in successfully", 'success')
-        return redirect(url_for('index'))
+        return redirect(next_page)
     return render_template('login.html')
 
 @app.route('/logout')
@@ -61,10 +65,34 @@ def logout():
     flash("You have successfully logged out", 'info')
     return redirect(url_for('login'))
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
-    context = {
+    user = {
+        'id': current_user.id,
+        'first_name': current_user.first_name,
+        'last_name': current_user.last_name,
+        'email': current_user.email
+    }
+    if request.method == 'POST':
+        r = request.form
+        u = User.query.get(user['id'])
         
+        u.first_name = r.get('first_name')
+        u.last_name = r.get('last_name')
+        u.email = r.get('email')
+
+        if r.get('password') != '' and r.get('confirm_password') != '':
+            if r.get('password') == r.get('confirm_password'):
+                u.password = r.get('password')
+                u.hash_password(u.password)
+        db.session.commit()
+        flash('Your information has been updated successfully', 'info')
+        return redirect(url_for('profile'))
+
+    context = {
+        'user': user,
+        'posts': current_user.posts
     }
     return render_template('profile.html', **context)
 
@@ -81,3 +109,17 @@ def create_post():
         db.session.commit()
         flash("The post was created successfully", 'success')
     return redirect(url_for('index'))
+
+# @app.route('/blog/<int:id>')
+# @login_required
+# def get_post(id):
+#     p = Post.query.get(id)
+#     return render_template('post-single.html', post=p)
+    
+@app.route('/blog')
+@login_required
+def get_post():
+    _id = request.args.get('id')
+    p = Post.query.get(_id)
+    return render_template('post-single.html', post=p)
+
