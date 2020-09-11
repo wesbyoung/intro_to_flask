@@ -1,7 +1,14 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<h3>Shopping Cart</h3>
+<h3>
+    Shopping Cart
+    <span class="float-right">
+        <a href="{{ url_for('shop.clear_cart') }}" class="btn btn-sm btn-danger">
+            Clear Cart <i class="fa fa-trash" aria-hidden="true"></i>
+        </a>
+    </span>
+</h3>
 <hr>
 <div class="card-body">
     {% for item in items %}
@@ -18,7 +25,7 @@
             </div>
             <div class="col-12 col-sm-12 text-sm-center col-md-4 text-md-right row">
                 <div class="col-3 col-sm-3 col-md-6 text-md-right" style="padding-top: 5px">
-                    <h6><strong>{{ '{:,.2f}'.format(item.price) }} <span class="text-muted">x</span> {{ item.qty }} </strong></h6>
+                    <h6><strong>{{ '{:,.2f}'.format(item.price) }} <span class="text-muted">x</span> {{ cart['items'].count(item) }} </strong></h6>
                 </div>
                 <div class="col-4 col-sm-4 col-md-4">
                     <!-- <div class="quantity">
@@ -28,9 +35,9 @@
                     </div> -->
                 </div>
                 <div class="col-2 col-sm-2 col-md-2 text-right">
-                    <button type="button" class="btn btn-outline-danger btn-xs">
+                    <a href="{{ url_for('shop.remove_from_cart', id=item.id) }}" type="button" style="color: white;" class="btn btn-danger btn-xs">
                         <i class="fa fa-trash" aria-hidden="true"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

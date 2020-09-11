@@ -34,10 +34,26 @@ def cart():
     for i in session['cart']['items']:
         if i not in display_cart:
             display_cart.append(i)
-    for i in display_cart:
-        i['qty'] = session['cart']['items'].count(i)
     context = {
         'items': display_cart,
         'cart_total': session['cart']['cart_total']
     }
     return render_template('cart.html', **context)
+
+@shop.route('/remove')
+def remove_from_cart():
+    _id = int(request.args.get('id'))
+    for item in session['cart']['items']:
+        if _id == item['id']:
+            session['cart']['items'].remove(item)
+            # session['cart']['cart_total'] -= item['price']
+            flash(f"Item has been removed", 'info')
+            break
+    return redirect(url_for('shop.cart'))
+
+@shop.route('/clear')
+def clear_cart():
+    session['cart']['items'].clear()
+    session['cart']['cart_total'] = 0
+    flash('All items have been removed from cart', 'success')
+    return redirect(url_for('shop.cart'))
