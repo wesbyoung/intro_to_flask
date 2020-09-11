@@ -14,8 +14,16 @@
             </li>
             {% endfor %}
             <li class="">
-                <a class="nav-link" href=""> 
-                    <span>Cart</span> <i class="fa fa-shopping-cart"></i> <span class="badge badge-light">{% if cart %} {{ cart|length }} {% else %} 0 {% endif %} | $0.00</span>
+                <a class="nav-link" href="{{ url_for('shop.cart') }}"> 
+                    <span>Cart</span> 
+                    <i class="fa fa-shopping-cart"></i>
+                     <span class="badge badge-light">
+                        {% if cart %} 
+                            {{ cart['items']|length }} | {{ '${:,.2f}'.format(cart['cart_total']) }} 
+                        {% else %} 
+                            0 | $0.00 
+                        {% endif %}
+                    </span>
                 </a>
             </li>
         </ul>

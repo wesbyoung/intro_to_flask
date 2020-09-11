@@ -125,5 +125,8 @@ def users():
 @app.context_processor
 def cart_stuff():
     if 'cart' not in session:
-        session['cart'] = []
+        session['cart'] = {
+            'items': [],
+            'cart_total': 0
+        }
     return {'cart': session['cart']}
