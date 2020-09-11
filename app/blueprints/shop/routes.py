@@ -31,9 +31,11 @@ def add_to_cart():
 @shop.route('/cart')
 def cart():
     display_cart = []
+    session['cart']['cart_total'] = 0
     for i in session['cart']['items']:
         if i not in display_cart:
             display_cart.append(i)
+        session['cart']['cart_total'] += i['price']
     context = {
         'items': display_cart,
         'cart_total': session['cart']['cart_total']

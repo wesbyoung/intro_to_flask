@@ -129,4 +129,6 @@ def cart_stuff():
             'items': [],
             'cart_total': 0
         }
+    for i in session['cart'].get('items'):
+        session['cart']['cart_total'] += i['price']    
     return {'cart': session['cart']}
