@@ -121,3 +121,9 @@ def unfollow():
 @login_required
 def users():
     return render_template('users.html', users=User.query.all())
+
+@app.context_processor
+def cart_stuff():
+    if 'cart' not in session:
+        session['cart'] = []
+    return {'cart': session['cart']}
