@@ -32,6 +32,9 @@ def create_app(config_class=Config):
     app.register_blueprint(shop)
 
     with app.app_context():
+        from app.blueprints.main import bp as main
+        app.register_blueprint(main)
+        
         from .import routes, models
 
     return app

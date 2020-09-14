@@ -4,24 +4,7 @@ from app.models import User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 
-@app.route('/')
-@login_required
-def index():
-    # print("Current User:", current_user)
-    # print("Active User:", current_user.is_active)
-    # print("Anonymous User:", current_user.is_anonymous)
-    # print("Authenticated User:", current_user.is_authenticated)
-    # print("ID of User:", current_user.get_id())
-    if current_user.is_authenticated:
-        posts = current_user.followed_posts().all()
-    else:
-        posts = []
-    return render_template('index.html', posts=posts)
 
-@app.route('/about')
-@login_required
-def about():
-    return render_template('about.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -129,6 +112,8 @@ def cart_stuff():
             'items': [],
             'cart_total': 0
         }
+    # Reset cart total to 0 before recounting price of all items in cart
+    session['cart']['cart_total'] = 0
     for i in session['cart'].get('items'):
         session['cart']['cart_total'] += i['price']    
     return {'cart': session['cart']}
