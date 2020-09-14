@@ -11,7 +11,7 @@
 	<h4>Hello, {{ "{} {}".format(current_user.first_name, current_user.last_name) }}</h4>
 	<div class="row">
 		<div class="col-md-6">
-			<form action="{{ url_for('profile') }}" method="POST">
+			<form action="{{ url_for('authentication.profile') }}" method="POST">
 				<!-- b4-form-input -->
 				<div class="form-group">
 					<input type="text" class="form-control" name="first_name" value="{{ user.first_name }}"

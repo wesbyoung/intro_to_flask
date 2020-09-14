@@ -17,9 +17,9 @@
 						{{ "{} {}".format(u.first_name, u.last_name) }}
 						<span class="float-right">
 							{% if current_user.is_following(u) %}
-								<a href="{{ url_for('unfollow', id=u.id) }}" class="btn btn-warning btn-sm">Unfollow</a>
+								<a href="{{ url_for('blog.unfollow', id=u.id) }}" class="btn btn-warning btn-sm">Unfollow</a>
 							{% else %}
-								<a href="{{ url_for('follow', id=u.id) }}" class="btn btn-info btn-sm">Follow</a>
+								<a href="{{ url_for('blog.follow', id=u.id) }}" class="btn btn-info btn-sm">Follow</a>
 							{% endif %}
 						</span>
 					</li>

@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ url_for('index') }}">Flask Application</a>
+    <a class="navbar-brand" href="{{ url_for('main.index') }}">Flask Application</a>
     <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse"
         data-target="#collapsibleNavId" aria-controls="collapsibleNavId" aria-expanded="false"
         aria-label="Toggle navigation">
@@ -30,20 +30,20 @@
         <ul class="navbar-nav m1-auto">
             {% if not current_user.is_authenticated %}
                 <li class="nav-item">
-                    <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+                    <a href="{{ url_for('authentication.login') }}" class="nav-link">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url_for('register') }}" class="nav-link">Register</a>
+                    <a href="{{ url_for('authentication.register') }}" class="nav-link">Register</a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a href="{{ url_for('users') }}" class="nav-link">Users</a>
+                    <a href="{{ url_for('blog.users') }}" class="nav-link">Users</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
+                    <a href="{{ url_for('authentication.profile') }}" class="nav-link">Profile</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+                    <a href="{{ url_for('authentication.logout') }}" class="nav-link">Logout</a>
                 </li>
             {% endif %}
         </ul>

@@ -22,16 +22,23 @@ def create_app(config_class=Config):
     login.login_view = 'login'
     login.login_message_category = 'warning'
 
-    from app.blueprints.blog import bp as blog
-    app.register_blueprint(blog)
-
-    from app.blueprints.api import bp as api
-    app.register_blueprint(api)
-
-    from app.blueprints.shop import bp as shop
-    app.register_blueprint(shop)
 
     with app.app_context():
-        from .import routes, models
+        from app.blueprints.main import bp as main
+        app.register_blueprint(main)
+
+        from app.blueprints.blog import bp as blog
+        app.register_blueprint(blog)
+
+        from app.blueprints.api import bp as api
+        app.register_blueprint(api)
+
+        from app.blueprints.shop import bp as shop
+        app.register_blueprint(shop)
+
+        from app.blueprints.authentication import bp as authentication
+        app.register_blueprint(authentication)
+
+        from .import routes
 
     return app
