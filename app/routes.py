@@ -11,5 +11,5 @@ def cart_stuff():
     # Reset cart total to 0 before recounting price of all items in cart
     session['cart']['cart_total'] = 0
     for i in session['cart'].get('items'):
-        session['cart']['cart_total'] += i['price']    
+        session['cart']['cart_total'] += i['price']
     return {'cart': session['cart']}

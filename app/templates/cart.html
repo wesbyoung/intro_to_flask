@@ -62,10 +62,42 @@
         </div>
     </div>
     <div class="pull-right" style="margin: 10px">
-        <a href="" class="btn btn-success pull-right">Checkout</a>
+        <button id="checkout-button" class="btn btn-success pull-right">Checkout</button>
         <div class="pull-right" style="margin: 5px">
             Total price: <b>{{ '${:,.2f}'.format(cart_total) }}</b>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // console.log('{{ stripe_publishable_key }}')
+        var stripe = Stripe('{{ stripe_publishable_key }}');
+        // console.log(stripe);
+
+        $('#checkout-button').on('click', function (e) {
+            fetch('{{ url_for("shop.create_checkout_session") }}', {
+                method: 'POST'
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (session) {
+                return stripe.redirectToCheckout({ sessionId: session.id })
+            })
+            .then(function (result) {
+                // console.log("Hello")
+            })
+            .catch(function (error) {
+                console.error('Error:', error)
+            })
+            // $.post('{{ url_for("shop.create_checkout_session") }}', function (data) {
+            //     console.log("This works!");
+            // });
+        })
+    </script>
 {% endblock %}

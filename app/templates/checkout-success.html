@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    {{ super() }} | Success
+{% endblock %}
+
+{% block body %}
+    <h3>Thanks for your order!</h3>
+    <hr>
+    <div>
+        {{ stripe_session }}
+    </div>
+    <p>
+        We appreciate your business!
+        If you have any questions, please email
+        <a href="mailto:orders@example.com">info@codingtemple.com</a>.
+    </p>
+
+{% endblock %}
