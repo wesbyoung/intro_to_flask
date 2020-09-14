@@ -78,3 +78,28 @@ def profile():
         'users': [user for user in User.query.all() if current_user != user]
     }
     return render_template('profile.html', **context)
+
+@authentication.route('/users/follow')
+@login_required
+def follow():
+    _id = request.args.get('id')
+    user = User.query.get(_id)
+    current_user.follow(user)
+    db.session.commit()
+    flash(f'You are now following {user.first_name} {user.last_name}', 'success')
+    return redirect(url_for('authentication.users'))
+
+@authentication.route('/users/unfollow')
+@login_required
+def unfollow():
+    _id = request.args.get('id')
+    user = User.query.get(_id)
+    current_user.unfollow(user)
+    db.session.commit()
+    flash(f'You have unfollowed {user.first_name} {user.last_name}', 'danger')
+    return redirect(url_for('authentication.users'))
+
+@authentication.route('/users')
+@login_required
+def users():
+    return render_template('users.html', users=User.query.all())
