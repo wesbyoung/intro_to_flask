@@ -1,6 +1,7 @@
 from .import bp as api
 from flask import request, url_for, redirect, jsonify
-from app.models import Post, User
+from app.models import Post
+from app.blueprints.authentication.models import User
 from app import db
 from datetime import datetime
 

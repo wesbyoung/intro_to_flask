@@ -16,7 +16,7 @@ def create_post():
         db.session.add(p)
         db.session.commit()
         flash("The post was created successfully", 'success')
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
     
 @blog.route('/blog')
 @login_required
