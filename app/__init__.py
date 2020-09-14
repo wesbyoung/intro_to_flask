@@ -19,7 +19,7 @@ def create_app(config_class=Config):
     moment.init_app(app)
     
     login.init_app(app)
-    login.login_view = 'login'
+    login.login_view = 'authentication.login'
     login.login_message_category = 'warning'
 
     from app.blueprints.blog import bp as blog

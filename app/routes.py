@@ -1,10 +1,4 @@
-from .import db
-from flask import current_app as app, render_template, request, redirect, url_for, flash, session
-from app.models import Post
-from app.blueprints.authentication.models import User
-from flask_login import login_user, logout_user, current_user, login_required
-from werkzeug.urls import url_parse
-
+from flask import current_app as app, session
 
 
 @app.context_processor
