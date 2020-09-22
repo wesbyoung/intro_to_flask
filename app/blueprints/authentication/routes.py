@@ -4,6 +4,7 @@ from .import bp as authentication
 from app.blueprints.authentication.models import User
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
+from .forms import ProfileForm
 
 @authentication.route('/register', methods=['GET', 'POST'])
 def register():
@@ -56,26 +57,45 @@ def profile():
         'last_name': current_user.last_name,
         'email': current_user.email
     }
-    if request.method == 'POST':
-        r = request.form
+    # if request.method == 'POST':
+    #     r = request.form
+    #     u = User.query.get(user['id'])
+        
+    #     u.first_name = r.get('first_name')
+    #     u.last_name = r.get('last_name')
+    #     u.email = r.get('email')
+
+    #     if r.get('password') != '' and r.get('confirm_password') != '':
+    #         if r.get('password') == r.get('confirm_password'):
+    #             u.password = r.get('password')
+    #             u.hash_password(u.password)
+    #     db.session.commit()
+    #     flash('Your information has been updated successfully', 'info')
+    #     return redirect(url_for('authentication.profile'))
+    form = ProfileForm()
+    form.first_name.data = user['first_name']
+    form.last_name.data = user['last_name']
+    form.email.data = user['email']
+
+    if form.validate_on_submit():
         u = User.query.get(user['id'])
         
-        u.first_name = r.get('first_name')
-        u.last_name = r.get('last_name')
-        u.email = r.get('email')
+        u.first_name = request.form.get('first_name')
+        u.last_name = request.form.get('last_name')
+        u.email = request.form.get('email')
 
-        if r.get('password') != '' and r.get('confirm_password') != '':
-            if r.get('password') == r.get('confirm_password'):
-                u.password = r.get('password')
-                u.hash_password(u.password)
+
+        if request.form.get('password') != '' and request.form.get('confirm_password') != '':
+            u.password = request.form.get('password')
+            u.hash_password(u.password)
         db.session.commit()
         flash('Your information has been updated successfully', 'info')
         return redirect(url_for('authentication.profile'))
-
     context = {
         'user': user,
         'posts': current_user.posts,
-        'users': [user for user in User.query.all() if current_user != user]
+        'users': [user for user in User.query.all() if current_user != user],
+        'form': form
     }
     return render_template('profile.html', **context)
 

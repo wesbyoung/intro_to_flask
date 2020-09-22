@@ -74,20 +74,6 @@ def cart():
 
 @shop.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-    # print("It works")
-    # print(stripe.stripe_keys)
-
-    # line_items=[{
-    #   'price_data': {
-    #     'currency': 'usd',
-    #     'product_data': {
-    #       'name': 'T-shirt',
-    #     },
-    #     'unit_amount': 2000,
-    #   },
-    #   'quantity': 1,
-    # }]
-
     stripe_line_items = []
     for p in session['display_cart']:
         product_dict = {
@@ -112,7 +98,14 @@ def create_checkout_session():
         success_url='http://localhost:5000/shop/checkout/success',
         cancel_url='http://localhost:5000/shop/checkout/cancel'
     )
-    session['stripe_session_information'] = stripe_session
+    # Pass String session information to either the success/cancel routes
+    session['stripe_Not a valid email addresssession_information'] = stripe_session
+
+    # Clear all items from cart and reset cart_total to 0
+    session['cart']['items'].clear()
+    session['cart']['cart_total'] = 0
+
+    # Return/Send the stripe session information back to cart.html
     return stripe_session
 
 @shop.route('/checkout/success')

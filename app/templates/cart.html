@@ -90,14 +90,11 @@
                 return stripe.redirectToCheckout({ sessionId: session.id })
             })
             .then(function (result) {
-                // console.log("Hello")
+                // Something to happen once the result is a success
             })
             .catch(function (error) {
                 console.error('Error:', error)
             })
-            // $.post('{{ url_for("shop.create_checkout_session") }}', function (data) {
-            //     console.log("This works!");
-            // });
         })
     </script>
 {% endblock %}
