@@ -1,7 +1,7 @@
 from .import bp as blog
 from flask import request,  url_for, redirect, flash, render_template
 from app import db
-from app.models import Post
+from app.blueprints.blog.models import Post
 from flask_login import current_user, login_required
 
 @blog.route('/create-post', methods=['POST'])
