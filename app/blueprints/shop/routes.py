@@ -1,6 +1,6 @@
 from .import bp as shop
 from flask import flash, request, render_template, redirect, url_for, session, jsonify
-from app.blueprints.shop.models import Product
+from app.models import Product
 
 import stripe, os
 
